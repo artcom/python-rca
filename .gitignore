@@ -1,1 +1,4 @@
 /__pycache__/
+/build/
+/rca.egg-info/
+/setup.cfg
