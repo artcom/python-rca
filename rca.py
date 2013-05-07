@@ -1,11 +1,6 @@
 import urllib
 import http.client
 
-def escape_arguments(theArguments):
-    return urllib.parse.quote("&".join(list(map(lambda key, value: key + "=" + value,
-                             theArguments.keys(),
-                             theArguments.values()))))
-
 def send_rca(theRciUri, theTarget, theArguments={}):
     escapedArguments = urllib.parse.quote("&".join(list(map(lambda key, value: key + "=" + value,
                              theArguments.keys(),
@@ -14,8 +9,8 @@ def send_rca(theRciUri, theTarget, theArguments={}):
                                                                arguments=escapedArguments)
     rci_uri = urllib.parse.urlparse(theRciUri)
     conn = http.client.HTTPConnection(rci_uri.netloc)
-    conn.request("POST", rci_uri.path, post_data)
+    conn.request("POST", rci_uri.path + "?" + post_data, post_data)
     response = conn.getresponse()
+    raw_payload = response.read().decode('utf-8')
     conn.close()
-    return response
-    
+    return response.status, raw_payload
